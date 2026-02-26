@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>计算机视觉与智能系统团队 | CVIS TEAM</title>
+    <style>
+        /* ============================================================
+           【核心样式】 - 定义全局视觉规范
+           ============================================================ */
+        :root {
+            --oxford-blue: #002147; 
+            --gold: #A68966;
+            --bg-gray: #F8FAFC;
+            --text-main: #1A202C;
+            --border: #E2E8F0;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: 'Times New Roman', "PingFang SC", "Microsoft YaHei", serif; 
+            line-height: 1.8; color: var(--text-main); margin: 0; background-color: #fff;
+        }
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 40px; }
+
+        /* 导航 */
+        /* 优化后的导航样式 */
+nav { 
+    background: #fff; 
+    border-bottom: 3px solid var(--oxford-blue);
+    position: sticky; 
+    top: 0; 
+    z-index: 1000; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); /* 稍微增强投影，更有悬浮感 */
+}
+
+nav .container { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    height: 80px; 
+}
+
+.logo { 
+    color: var(--oxford-blue); 
+    font-weight: 900; 
+    font-size: 1.6rem; 
+    letter-spacing: 1px; 
+    flex-shrink: 0;
+}
+
+nav ul { 
+    list-style: none; 
+    display: flex; 
+    gap: 18px; /* 适当缩小间距以容纳更多项 */
+    margin: 0; 
+    padding: 0; 
+}
+
+nav ul a { 
+    text-decoration: none; 
+    color: var(--oxford-blue); 
+    font-weight: 700; /* 加粗字体显得更厚重、大气 */
+    font-size: 0.95rem; /* 稍微调大字号，方便阅读 */
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* 增加精致的鼠标悬停效果 */
+nav ul a:hover {
+    color: var(--gold);
+}
+
+nav ul a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--gold);
+    transition: width 0.3s ease;
+}
+
+nav ul a:hover::after {
+    width: 100%;
+}
+
+        /* Banner */
+        .hero { 
+            background: linear-gradient(rgba(0,33,71,0.85), rgba(0,33,71,0.85)), url('images/lab_banner.jpg') center/cover;
+            color: white; padding: 120px 0; text-align: center;
+        }
+        .hero h1 { font-size: 3rem; margin: 0; letter-spacing: 3px; }
+
+
+        /* ============================================================
+    【局部模块：团队负责人专用样式】
+    说明：仅控制 ID 为 pi 的板块，不影响页面其他部分
+   ============================================================ */
+
+        /* 专用容器，增加间距感 */
+        .pi-wrapper {
+            display: flex;
+            gap: 60px;
+            align-items: flex-start;
+            margin-bottom: 80px;
+        }
+
+        /* 专用照片样式 */
+        .pi-avatar {
+            width: 300px;
+            height: auto;
+            border: 1px solid #e2e8f0;
+            flex-shrink: 0;
+            object-fit: cover;
+        }
+
+        /* 专用文字区域 */
+        .pi-content-box {
+            flex: 1;
+        }
+
+        /* 负责人姓名 */
+        .pi-name {
+            font-size: 2.2rem;
+            color: #002147; /* 牛津蓝 */
+            margin: 0 0 10px 0;
+        }
+
+        /* 负责人头衔 */
+        .pi-rank-tags {
+            color: #A68966; /* 沉稳金 */
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            display: block;
+        }
+
+        /* 重点优化：负责人专用列表（无下划线，独立控制） */
+        .pi-detail-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pi-detail-list li {
+            padding: 6px 0;
+            border-bottom: none !important; /* 强制取消下划线，不影响全局 */
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #2D3748;
+        }
+
+        /* 手机端适配：负责人模块专用 */
+        @media (max-width: 900px) {
+            .pi-wrapper {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+            .pi-avatar {
+                width: 100%;
+                max-width: 320px;
+            }
+            .pi-name {
+                font-size: 1.8rem;
+                text-align: center;
+            }
+            .pi-rank-tags {
+                text-align: center;
+            }
+        }
+
+        /* 通栏布局 - 一级标题 */
+        section { padding: 100px 0; width: 100%; border-bottom: 1px solid #eee; }
+        .bg-gray { background-color: var(--bg-gray); }
+        .l1-title { 
+            font-size: 2.4rem; color: var(--oxford-blue); margin: 0 0 60px 0; 
+            border-left: 8px solid var(--oxford-blue); padding-left: 25px;
+        }
+
+        /* 局部维护单元 - 二级标题 */
+        .l2-title { 
+            font-size: 1.6rem; color: var(--oxford-blue); margin: 40px 0 25px; 
+            border-bottom: 2px solid var(--gold); display: inline-block; padding-bottom: 5px;
+        }
+
+        /* 列表与详情排版 */
+        .data-list { list-style: none; padding: 0; margin: 0; }
+        .data-list li { padding: 12px 0; border-bottom: none; var(--border); font-size: 1.05rem; }
+        .pub-tag { display: inline-block; padding: 1px 8px; background: var(--oxford-blue); color: #fff; border-radius: 2px; font-size: 0.75rem; margin-right: 12px; font-weight: bold; }
+
+        /* 响应式排版单元 */
+        .flex-row { display: flex; gap: 60px; align-items: flex-start; margin-bottom: 80px; }
+        .photo-main { width: 320px; height: auto; border: 1px solid #ddd; flex-shrink: 0; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; }
+
+        /* Logo 墙样式 */
+        .logo-wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
+        .logo-item { height: 110px; background: #fff; border: 1px solid #eee; display: flex; align-items: center; justify-content: center; padding: 15px; }
+        .logo-item img { max-width: 100%; max-height: 100%; filter: grayscale(100%); transition: 0.4s; }
+        .logo-item:hover img { filter: grayscale(0%); transform: scale(1.05); }
+
+        /* 团队风采相册 */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; }
+        .gallery-card { border: 1px solid #eee; background: #fff; }
+        .gallery-card img { width: 100%; height: 260px; object-fit: cover; display: block; }
+        .gallery-card p { padding: 15px; text-align: center; margin: 0; font-size: 0.9rem; font-weight: 500; }
+
+        /* 手机端深度兼容 */
+        @media (max-width: 900px) {
+            nav ul { display: none; }
+            .hero h1 { font-size: 1.8rem; }
+            .l1-title { font-size: 1.8rem; }
+            .flex-row { flex-direction: column; align-items: center; gap: 30px; }
+            .photo-main { width: 100%; max-width: 320px; }
+            .container { padding: 0 20px; }
+            .grid-3 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="container">
+        <div class="logo">CVIS TEAM</div>
+        <ul>
+            <li><a href="#pi">团队负责人</a></li>
+            <li><a href="#research">研究方向</a></li>
+            <li><a href="#projects">科研项目</a></li>
+            <li><a href="#honors">荣获奖项</a></li>
+            <li><a href="#results">团队成果</a></li>
+            <li><a href="#graduation">毕业去向</a></li>
+            <li><a href="#collab">合作研究</a></li>
+            <li><a href="#activities">团队风采</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="hero">
+    <div class="container">
+        <h1>计算机视觉与智能系统团队</h1>
+        <p>Intelligence · Vision · System · Healthcare</p>
+    </div>
+</div>
+
+<div class="container-fluid">
+
+
+
+
+    <!-- 团队负责人 -->
+    <section id="pi" style="padding: 100px 0 60px 0; border-bottom: 1px solid #eee;">
+    <style>
+        /* 1. 基础布局与排版 */
+        .pi-detail-list { list-style: none; padding: 0; margin: 0; }
+        .pi-detail-list li {
+            padding: 4px 0; line-height: 1.6;
+            border-bottom: none !important; 
+            font-size: 1.05rem; color: #2D3748;
+        }
+        .pi-rank-tags {
+            color: #A68966; font-weight: bold; margin-bottom: 18px;    
+            font-size: 1.1rem; display: block; line-height: 1.4;
+        }
+        .pi-name { font-size: 2.2rem; color: #002147; margin: 0 0 10px 0; }
+        .pi-wrapper { display: flex; gap: 60px; align-items: flex-start; margin-bottom: 80px; }
+        .pi-wrapper:last-child { margin-bottom: 0; }
+        .pi-avatar { width: 300px; height: auto; border: 1px solid #e2e8f0; flex-shrink: 0; object-fit: cover; }
+        .pi-content-box { flex: 1; }
+
+        /* 2. 邮箱复制交互样式 */
+        .copy-email-wrapper {
+            cursor: pointer;
+            color: #002147;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            transition: color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            font-weight: 500;
+        }
+        .copy-email-wrapper:hover { color: #A68966; }
+        .copy-toast {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #A68966;
+            color: #fff;
+            padding: 2px 10px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .copy-toast.show { opacity: 1; }
+
+        @media (max-width: 900px) {
+            .pi-wrapper { flex-direction: column; align-items: center; gap: 30px; margin-bottom: 50px; }
+            .pi-avatar { width: 100%; max-width: 300px; }
+        }
+    </style>
+
+    <div class="container">
+        <h2 style="font-size: 2.4rem; color: #002147; border-left: 8px solid #002147; padding-left: 25px; margin-bottom: 60px;">团队负责人</h2>
+        
+        <div class="pi-wrapper">
+            <img src="images/niuke.jpg" alt="牛科" class="pi-avatar">
+            <div class="pi-content-box">
+                <h3 class="pi-name">牛科</h3>
+                <span class="pi-rank-tags">团队负责人 · 教授 · 博士 · IEEE Senior Member · 悉尼科技大学人工智能研究中心访问学者</span>
+                <ul class="pi-detail-list">
+                    <li>北京信息科技大学计算机学院</li>
+                    <li>中国生物信息学学会生物医学数据挖掘与计算专委会委员</li>
+                    <li>中国中医药信息学会人工智能分会理事</li>
+                    <li>福建省高层次人才（B类）</li>
+                    <li>在校主持纵、横向项目20余项，入选勤信人才培育计划、重点研究培育计划等人才支持项目</li>
+                    <li>在国际学术期刊及会议上发表学术论文50余篇（含ESI高被引、中科院SCI分区TOP、一区、二区及顶级国际会议论文20余篇），任CCF推荐国际会议ICIC程序委员会联合主席、ICWSM、IJCNN、IRI、ADMA程序委员会委员、国际学术期刊《International Journal of Statistics in Medical Research》、《Robot Learning》编委</li>
+                    <li>北京市海淀区清河小营东路12号 100192</li>
+                    <li>北京市昌平区太行路55号 102206</li>
+                    <li onclick="copyEmail('niuke@bistu.edu.cn', this)">
+                        Email: <span class="copy-email-wrapper">niuke@bistu.edu.cn<span class="copy-toast">已复制!</span></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="pi-wrapper">
+            <img src="images/fengxue.png" alt="冯雪" class="pi-avatar">
+            <div class="pi-content-box">
+                <h3 class="pi-name">冯雪</h3>
+                <span class="pi-rank-tags">副教授 · 博士 · 研究生导师</span>
+                <ul class="pi-detail-list">
+                    <li>北京信息科技大学计算机学院</li>
+                    <li>在校主持纵、横向项目多项，在国际学术期刊及会议上发表学术论文20余篇</li>
+                    <li>北京市海淀区清河小营东路12号，100192</li>
+                    <li>北京市昌平区太行路55号，102206</li>
+                    <li onclick="copyEmail('fengxue@bistu.edu.cn', this)">
+                        Email: <span class="copy-email-wrapper">fengxue@bistu.edu.cn<span class="copy-toast">已复制!</span></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyEmail(email, element) {
+            navigator.clipboard.writeText(email).then(() => {
+                const toast = element.querySelector('.copy-toast');
+                toast.classList.add('show');
+                setTimeout(() => { toast.classList.remove('show'); }, 1500);
+            });
+        }
+    </script>
+</section>
+
+
+
+
+
+    <!-- 研究方向 -->
+    <section id="research" class="bg-gray" style="padding: 100px 0;">
+    <style>
+        /* 专用布局：前四个研究方向一排两个 */
+        .res-grid-two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        /* 研究方向卡片：去横线，改用左边框装饰 */
+        .res-card {
+            background: #fff;
+            padding: 30px;
+            border-left: 6px solid #ddd; /* 基础边框 */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            transition: transform 0.3s;
+        }
+        .res-card:hover { transform: translateY(-5px); }
+
+        /* 标题色彩区分与图标间距 */
+        .res-title {
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        /* 个性化色彩定义 */
+        .title-cv { color: #003366; border-left-color: #003366 !important; }    /* 深海蓝 */
+        .title-bio { color: #2E7D32; border-left-color: #2E7D32 !important; }   /* 森林绿 */
+        .title-ai { color: #512DA8; border-left-color: #512DA8 !important; }    /* 科技紫 */
+        .title-nav { color: #C62828; border-left-color: #C62828 !important; }   /* 朱砂红 */
+
+        .res-card p {
+            font-size: 0.98rem;
+            color: #4A5568;
+            text-align: justify;
+            margin-top: 15px;
+            line-height: 1.7;
+        }
+
+        /* 2026招生计划：重新设计，更紧凑、更高级 */
+        .res-admissions-compact {
+            max-width: 900px; /* 限制宽度，不让卡片太大 */
+            margin: 60px auto 0;
+            background: linear-gradient(90deg, #f0f7ff 0%, #ffffff 100%);
+            border-left: 8px solid #002147;
+            border-top: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 25px 40px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .res-adm-icon {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+
+        .res-adm-text-box { flex: 1; }
+
+        .res-adm-label {
+            font-size: 1.3rem;
+            color: #002147;
+            font-weight: 800;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .res-adm-detail {
+            font-size: 1rem;
+            color: #2D3748;
+            margin: 0;
+        }
+
+        /* 手机端自适应 */
+        @media (max-width: 900px) {
+            .res-grid-two { grid-template-columns: 1fr; gap: 20px; }
+            .res-admissions-compact { 
+                flex-direction: column; 
+                text-align: center; 
+                padding: 25px;
+                margin-top: 40px;
+            }
+        }
+    </style>
+
+    <div class="container">
+        <h2 class="l1-title">研究方向</h2>
+        
+        <div class="res-grid-two">
+            <div class="res-card title-cv">
+                <h4 class="res-title">👁️ 计算机视觉</h4>
+                <p>以计算机视觉技术为核心，模拟生物视觉实现医疗图像的精准解析，重点研究基于深度学习的医学图像分割、配准与多模态影像融合技术，开展手术环境感知、三维结构重建及视点合成研究，为临床诊断和手术规划提供精准的视觉支撑。</p>
+            </div>
+
+            <div class="res-card title-bio">
+                <h4 class="res-title">🧬 生物信息智能与医疗应用</h4>
+                <p>聚焦生物信息学与人工智能的深度融合，依托医疗数据隐私保护的联邦学习框架、异构数据融合技术，深耕个性化建模研究，推动AI技术在医疗诊断、健康管理、药物研发等领域的落地应用，实现生物系统研究与智能医疗服务的双向赋能。</p>
+            </div>
+
+            <div class="res-card title-ai">
+                <h4 class="res-title">🧠 医疗大模型与智能诊疗决策</h4>
+                <p>专注多模态医疗大模型的构建与表示学习，结合强化学习优化诊疗决策流程，建立模型可信评估体系并推动临床应用优化，打造可模拟人类医疗行为的智能系统，助力提升医疗服务的质量、效率与智能化水平。</p>
+            </div>
+
+            <div class="res-card title-nav">
+                <h4 class="res-title">📍 智能手术导航与精准辅助诊疗</h4>
+                <p>融合人工智能技术与临床手术需求，开展多科室精准手术导航研究，覆盖眼科数字化精准验配、肝胆外科微波消融、心血管外科支架植入、骨科髋膝关节置换及软骨重建等方向，保障手术精准性与安全性，赋能临床精准诊疗。</p>
+            </div>
+        </div>
+
+        <div class="res-admissions-compact">
+            <div class="res-adm-icon">📢</div>
+            <div class="res-adm-text-box">
+                <span class="res-adm-label">2026年招生计划</span>
+                <p class="res-adm-detail">2026年计划在计算机科学与技术、电子信息（计算机技术、人工智能-智能计算、网络与信息安全）方向招生6人，欢迎报考我院同学邮件联系。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+    
+    <!-- 科研项目 -->
+    <section id="projects" style="padding: 100px 0; background-color: #fff;">
+    <style>
+        /* 1. 板块独立容器 */
+        .project-mod-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-top: 2px solid var(--oxford-blue); /* 顶部深蓝加粗线增加庄重感 */
+        }
+
+        /* 2. 行样式：条纹交替，增加易读性 */
+        .project-mod-item {
+            display: grid;
+            grid-template-columns: 1fr 320px; /* 项目名 | 资助机构与状态 */
+            gap: 20px;
+            padding: 18px 15px;
+            border-bottom: 1px solid #edf2f7;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .project-mod-item:nth-child(even) {
+            background-color: #fcfdfe; /* 微妙的条纹底色 */
+        }
+
+        .project-mod-item:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* 3. 项目名称样式 */
+        .project-mod-name {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--oxford-blue);
+            line-height: 1.5;
+        }
+
+        /* 4. 资助机构与状态样式 */
+        .project-mod-meta {
+            text-align: right;
+            font-size: 0.95rem;
+            color: #718096;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* 5. “在研”标签：精致且不突兀 */
+        .project-mod-tag-active {
+            padding: 2px 10px;
+            background-color: #e6fffa;
+            color: #2c7a7b;
+            border: 1px solid #b2f5ea;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        /* 📱 手机端适配：行列转换 */
+        @media (max-width: 900px) {
+            .project-mod-item {
+                grid-template-columns: 1fr; /* 变为单列 */
+                gap: 8px;
+                padding: 15px 10px;
+            }
+            .project-mod-meta {
+                justify-content: flex-start; /* 机构信息左对齐 */
+                text-align: left;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+
+    <div class="container">
+        <h2 class="l1-title">科研项目</h2>
+
+        <div class="project-mod-list">
+            
+            <div class="project-mod-item">
+                <div class="project-mod-name">北京市自然科学基金面上项目（4262044）</div>
+                <div class="project-mod-meta">
+                    <span>北京市自然科学基金委</span>
+                    <span class="project-mod-tag-active">在研</span>
+                </div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">面向软硬件产业基础软硬件供应链保障公共服务平台项目</div>
+                <div class="project-mod-meta">
+                    <span>工业和信息化部</span>
+                    <span class="project-mod-tag-active">在研</span>
+                </div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">应用编程语言关键技术及配套工具项目</div>
+                <div class="project-mod-meta">
+                    <span>中国电子技术标准化研究院</span>
+                    <span class="project-mod-tag-active">在研</span>
+                </div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">浙江省“科创甬江2035”重点研发项目</div>
+                <div class="project-mod-meta">
+                    <span>浙江省宁波市科技局</span>
+                    <span class="project-mod-tag-active">在研</span>
+                </div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">OK镜数字化精准验配系统</div>
+                <div class="project-mod-meta">
+                    <span>爱博诺德医疗科技股份有限公司</span>
+                    <span class="project-mod-tag-active">在研</span>
+                </div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">北京市高等教育学会课题-重点项目(省部级)</div>
+                <div class="project-mod-meta"><span>北京市高等教育学会</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">北京市教育科学“十三五”规划项目(省部级)</div>
+                <div class="project-mod-meta"><span>北京市教学科学研究院</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">基于超声图像的三维目标重建系统</div>
+                <div class="project-mod-meta"><span>南方科技大学医院</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">北京信息科技大学教学改革项目(2024)</div>
+                <div class="project-mod-meta"><span>北京信息科技大学</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">中国农业科学院重大科研设施项目</div>
+                <div class="project-mod-meta"><span>中国农业科学院</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">国家自然科学基金面上项目(61872044)</div>
+                <div class="project-mod-meta"><span>国家自然科学基金委</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">北京市教育委员会科技计划项目</div>
+                <div class="project-mod-meta"><span>北京市教育委员会</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">北京市本科教学改革创新项目</div>
+                <div class="project-mod-meta"><span>北京市教育委员会</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">北京信息科技大学勤信人才培育项目</div>
+                <div class="project-mod-meta"><span>北京信息科技大学</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">北京信息科技大学重点研究培育项目</div>
+                <div class="project-mod-meta"><span>北京信息科技大学</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">北京信息科技大学促进高校内涵发展项目-“信息+”</div>
+                <div class="project-mod-meta"><span>北京信息科技大学</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">北京信息科技大学教学改革项目(2018)</div>
+                <div class="project-mod-meta"><span>北京信息科技大学</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">北京信息科技大学科研基金项目</div>
+                <div class="project-mod-meta"><span>北京信息科技大学</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">教育部产学合作协同育人项目</div>
+                <div class="project-mod-meta"><span>教育部高等教育司</span></div>
+            </div>
+
+            <div class="project-mod-item">
+                <div class="project-mod-name">数字出版技术国家重点实验室开放课题(面上项目)</div>
+                <div class="project-mod-meta"><span>数字出版技术国家重点实验室</span></div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+
+    <!-- 荣获奖项 -->
+    <section id="honors" class="bg-gray" style="padding: 100px 0;">
+    <style>
+        /* 1. 板块专用容器布局 */
+        .honor-v2-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            gap: 50px;
+            align-items: flex-start;
+        }
+
+        /* 2. 荣誉类别容器 */
+        .honor-v2-category {
+            background: transparent;
+        }
+
+        /* 3. 二级标题自定义样式 */
+        .honor-v2-sub-title {
+            font-size: 1.6rem;
+            color: var(--oxford-blue);
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: bold;
+        }
+
+        /* 4. 勋章式列表项 */
+        .honor-v2-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .honor-v2-item {
+            background: #fff;
+            margin-bottom: 15px;
+            padding: 18px 20px;
+            border-left: 5px solid var(--oxford-blue); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.2s, border-left-color 0.2s;
+        }
+
+        .honor-v2-item:hover {
+            transform: translateX(5px);
+            border-left-color: var(--gold);
+        }
+
+        .honor-v2-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .honor-v2-text {
+            font-size: 1rem;
+            color: var(--text-main);
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* 5. 突出显示的 Student Paper Award 板块 */
+        .honor-v2-spa-box {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: rgba(166, 137, 102, 0.05); 
+            border-radius: 4px;
+        }
+
+        @media (max-width: 900px) {
+            .honor-v2-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .honor-v2-sub-title {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+
+    <div class="container">
+        <h2 class="l1-title">荣获奖项</h2>
+
+        <div class="honor-v2-grid">
+            
+            <div class="honor-v2-category">
+                <div class="honor-v2-sub-title">🎖️ 团队及教师荣誉</div>
+                <ul class="honor-v2-list">
+                    <li class="honor-v2-item"><span class="honor-v2-icon">🛡️</span><span class="honor-v2-text">获国家国防科技工业局优秀成果鉴定</span></li>
+                    <li class="honor-v2-item"><span class="honor-v2-icon">📜</span><span class="honor-v2-text">获中国自动化学会优秀论文奖</span></li>
+                    <li class="honor-v2-item"><span class="honor-v2-icon">🏫</span><span class="honor-v2-text">获北京信息科技大学教育教学成果一等奖</span></li>
+                    <li class="honor-v2-item"><span class="honor-v2-icon">🌟</span><span class="honor-v2-text">获北京信息科技大学青年教师教学基本功比赛一等奖和教学新星称号</span></li>
+                    <li class="honor-v2-item"><span class="honor-v2-icon">✍️</span><span class="honor-v2-text">获北京信息科技大学青年教师优秀教案奖</span></li>
+                    <li class="honor-v2-item"><span class="honor-v2-icon">📖</span><span class="honor-v2-text">获北京信息科技大学首批课思政优秀教学案例奖</span></li>
+                    <li class="honor-v2-item"><span class="honor-v2-icon">👥</span><span class="honor-v2-text">多次获评北京信息科技大学优秀班主任</span></li>
+                    <li class="honor-v2-item"><span class="honor-v2-icon">📈</span><span class="honor-v2-text">因所指导班级就业率全院第一，获北京信息科技大学就业工作实效奖</span></li>
+                </ul>
+            </div>
+
+            <div class="honor-v2-category">
+                <div class="honor-v2-sub-title">🎓 指导学生荣誉</div>
+                
+                <div class="honor-v2-spa-box">
+                    <div style="font-weight: bold; color: var(--gold); margin-bottom: 15px; font-size: 1.1rem;">🏆 Best Student Paper Award</div>
+                    <ul class="honor-v2-list">
+                        <li class="honor-v2-item" style="border-left-color: var(--gold);">
+                            <span class="honor-v2-text">所指导学生学术论文获 <i>International Symposium on Artificial Intelligence and Robotics</i> <b>Best Student Paper Award</b></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <ul class="honor-v2-list">
+                        <li class="honor-v2-item"><span class="honor-v2-icon">🥇</span><span class="honor-v2-text">所指导学生获全国生物医学数据挖掘与计算学生科研创意大赛，一等奖</span></li>
+                        <li class="honor-v2-item"><span class="honor-v2-icon">🥈</span><span class="honor-v2-text">所指导学生获“挑战杯”首都大学生课外学术科技作品竞赛，二等奖</span></li>
+                        <li class="honor-v2-item"><span class="honor-v2-icon">🔥</span><span class="honor-v2-text">所指导学生获“互联网+”大学生创新创业大赛一等奖</span></li>
+                        <li class="honor-v2-item"><span class="honor-v2-icon">🎓</span><span class="honor-v2-text">所指导学生多次获北京市级、校级优秀毕业生和优秀毕业设计(论文)</span></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+    <!-- 团队成果 -->
+    <section id="results" style="padding: 100px 0; background-color: #fff;">
+    <style>
+        /* --- 学术论文部分样式 (保持之前稳定的折叠逻辑) --- */
+        .results-mod-list { list-style: none; padding: 0; margin: 0; }
+        .results-mod-item {
+            padding: 22px 0; border-bottom: 1px solid #edf2f7;
+            display: flex; gap: 20px; align-items: flex-start;
+            transition: background-color 0.2s;
+        }
+        .results-mod-item:hover { background-color: #f8fafc; }
+        .results-mod-tags { display: flex; flex-wrap: wrap; gap: 8px; width: 180px; flex-shrink: 0; }
+        .res-tag { font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 2px; text-transform: uppercase; white-space: nowrap; }
+        .tag-top { background-color: var(--gold); color: #fff; }
+        .tag-sci { background-color: var(--oxford-blue); color: #fff; }
+        .tag-esi { background-color: #c53030; color: #fff; }
+        .results-mod-content { flex: 1; font-size: 1.05rem; color: var(--text-main); line-height: 1.7; }
+        .results-mod-content strong { color: #000; font-weight: 700; }
+        .results-mod-impact { color: #718096; font-size: 0.95rem; }
+
+        /* 论文折叠容器 */
+        .results-expand-wrapper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.6s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
+        .results-expand-wrapper.is-open { grid-template-rows: 1fr; }
+        .results-expand-content { min-height: 0; }
+        .results-fade-overlay { height: 100px; background: linear-gradient(transparent, #fff); margin-top: -100px; position: relative; pointer-events: none; z-index: 5; transition: opacity 0.4s; }
+        .results-fade-overlay.is-hidden { opacity: 0; }
+        .results-toggle-container { display: flex; justify-content: flex-end; padding-top: 25px; }
+        .results-toggle-btn { background: none; border: none; color: var(--oxford-blue); font-size: 1rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; outline: none; }
+        .results-toggle-btn:hover { color: var(--gold); text-decoration: underline; }
+        .results-toggle-btn i { font-style: normal; font-family: arial; transition: transform 0.4s; }
+
+        /* ============================================================
+           【核心修改：知识产权板块大气化重构】
+           ============================================================ */
+        .results-mod-ip-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 35px; 
+            margin-top: 40px; 
+        }
+
+        .results-mod-ip-box { 
+            background-color: #fff; /* 改为纯白，极大化视觉空间 */
+            padding: 40px; /* 增加内边距，更有呼吸感 */
+            border-left: 6px solid var(--oxford-blue); /* 强化左侧证书感装饰条 */
+            box-shadow: 0 10px 40px rgba(0, 33, 71, 0.05); /* 增加极轻微的阴影，显高级 */
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .results-mod-ip-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 33, 71, 0.1);
+            border-left-color: var(--gold); /* 悬停变为金色 */
+        }
+
+        .results-mod-ip-box li { 
+            margin-bottom: 18px; /* 增加行间距，显得成果更丰硕 */
+            line-height: 1.6; 
+            font-size: 1.1rem; /* 【核心】字体调大至 1.1rem，非常大气 */
+            list-style: none;
+            color: #2d3748;
+            border-bottom: 1px dashed #edf2f7; /* 增加虚线分割线，增强视觉节奏 */
+            padding-bottom: 12px;
+        }
+
+        .results-mod-ip-box li:last-child { border-bottom: none; }
+
+        /* 强化成果编号与证书号 */
+        .ip-num { color: var(--oxford-blue); font-weight: 800; margin-right: 8px; }
+        .ip-code { color: var(--gold); font-weight: 700; margin-left: 5px; font-family: 'Consolas', monospace; }
+
+        @media (max-width: 900px) {
+            .results-mod-item { flex-direction: column; gap: 10px; }
+            .results-mod-tags { width: 100%; }
+            .results-mod-ip-grid { grid-template-columns: 1fr !important; gap: 25px !important; }
+            .results-mod-ip-box { padding: 25px; }
+        }
+    </style>
+
+    <div class="container">
+        <h2 class="l1-title">团队成果（近五年部分研究成果）</h2>
+
+        <h4 class="l2-title">学术论文</h4>
+        <div class="results-mod-list">
+            <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-top">JCR 1区</span><span class="res-tag tag-sci">IF 15.5</span></div><div class="results-mod-content">[1] SAFedHDM: Semi-asynchronous federated learning with highlight diffusion model for medical image segmentation. <strong>Information Fusion, 2025.</strong> <span class="results-mod-impact">（SCI检索，JCR1区，数据融合领域顶级期刊，影响因子15.5）</span></div></div>
+            <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-top">JCR 1区</span><span class="res-tag tag-sci">IF 7.5</span></div><div class="results-mod-content">[2] TGFed: Transferability-Guided Federated Learning for Unseen Client Adaptation. <strong>Expert Systems with Applications, 2025.</strong> <span class="results-mod-impact">（SCI检索，JCR1区，人工智能领域顶级期刊，影响因子7.5）</span></div></div>
+            <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-top">JCR 1区</span><span class="res-tag tag-sci">IF 6.5</span></div><div class="results-mod-content">[3] FedCGP: Cluster-Based Gradual Personalization for Federated Medical Image Segmentation. <strong>IEEE TETCI, 2025.</strong> <span class="results-mod-impact">（SCI检索，JCR1区，影响因子6.5）</span></div></div>
+            <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-top">JCR 1区</span><span class="res-tag tag-sci">IF 10.6</span></div><div class="results-mod-content">[4] Multi-view Test-time Adaptation for Semantic Segmentation in Clinical Cataract Surgery. <strong>IEEE TMI, 2025.</strong> <span class="results-mod-impact">（SCI检索，JCR1区，医学图像领域顶级期刊，影响因子10.6）</span></div></div>
+            <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-top">CCF A类</span><span class="res-tag tag-sci">录用待发表</span></div><div class="results-mod-content">[5] DeLightMono: Enhancing Self-Supervised Monocular Depth Estimation in Endoscopy by Decoupling Uneven Illumination. <strong>AAAI, 2026.</strong> <span class="results-mod-impact">（CCF A类，人工智能顶级会议，已录用待发表）</span></div></div>
+            <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-top">CCF A类</span></div><div class="results-mod-content">[6] AIF-SFDA: Autonomous Information Filter-driven Source-Free Domain Adaptation for Medical Image Segmentation. <strong>AAAI, 2025.</strong></div></div>
+            <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-top">JCR 1区</span><span class="res-tag tag-sci">IF 3.9</span></div><div class="results-mod-content">[7] CFM-UNet: coupling local and global feature extraction networks for medical image segmentation. <strong>Scientific Reports, 2025.</strong></div></div>
+            <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-top">JCR 1区</span><span class="res-tag tag-sci">IF 4.5</span></div><div class="results-mod-content">[8] MMP-MSH: Multimodal Mortality Prediction Based on a Multilevel Semantic Hypergraph Network. <strong>IEEE TCSS, 2024.</strong></div></div>
+            <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-top">JCR 1区</span><span class="res-tag tag-sci">IF 10.6</span></div><div class="results-mod-content">[9] Enhancing and Adapting in the Clinic: Source-free Unsupervised Domain Adaptation for Medical Image Enhancement. <strong>IEEE TMI, 2023.</strong></div></div>
+            <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-top">JCR 1区</span><span class="res-tag tag-sci">IF 10.9</span></div><div class="results-mod-content">[10] A Generic Fundus Image Enhancement Network Boosted by Frequency Self-supervised Representation Learning. <strong>Medical Image Analysis, 2023.</strong></div></div>
+            <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-top">JCR 1区</span><span class="res-tag tag-sci">IF 8.0</span></div><div class="results-mod-content">[11] Fusion of sequential visits and medical ontology for mortality prediction. <strong>JBI, 2022.</strong></div></div>
+            <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-top">JCR 1区</span><span class="res-tag tag-sci">IF 6.698</span></div><div class="results-mod-content">[12] P-ResUnet: Segmentation of brain tissue with Purified Residual Unet. <strong>Computers in Biology and Medicine, 2022.</strong></div></div>
+            <div class="results-mod-item" style="border-bottom:none;">
+                <div class="results-mod-tags"><span class="res-tag tag-esi">ESI高被引</span><span class="res-tag tag-sci">SCI</span></div>
+                <div class="results-mod-content">[13] Multichannel Deep Attention Neural Networks for the Classification of Autism Spectrum Disorder. <strong>COMPLEXITY, 2020.</strong> <span class="results-mod-impact">（ESI学科全球前1%高被引）</span></div>
+            </div>
+
+            <div id="results-fade" class="results-fade-overlay"></div>
+
+            <div id="results-expandable" class="results-expand-wrapper">
+                <div class="results-expand-content">
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">JCR 2区</span></div><div class="results-mod-content">[14] CNN autoencoders and LSTM-based reduced order model for student dopout prediction. <strong>Neural Computing and Applications, 2023.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">JCR 2区</span></div><div class="results-mod-content">[15] Intensive Care Unit readmission prediction with correlation enhanced multi-task learning. <strong>Computers and Electrical Engineering, 2023.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">JCR 2区</span></div><div class="results-mod-content">[16] PMCT: Parallel Multiscale Convolutional Temporal model for MOOC dropout prediction. <strong>Computers and Electrical Engineering, 2023.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">JCR 2区</span></div><div class="results-mod-content">[17] A Multi-Head Self-Attention Deep Learning Approach for Detection and Recommendation of HFOs in Epilepsy. <strong>Frontiers in Neuroinformatics, 2022.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">EI检索</span></div><div class="results-mod-content">[18] Hybrid neural network model for MOOC dropout prediction. <strong>Complex System Modeling and Simulation, 2025.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">EI检索</span></div><div class="results-mod-content">[19] A hybrid model for predicting academic performance of engineering undergraduates. <strong>Int. J. of Modeling, Simulation, and Scientific Computing, 2022.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">CCF推荐</span></div><div class="results-mod-content">[20] EndoZero: Zero-shot Endoscopic Depth Estimation Enabled by a Lightweight Focal Length Estimation Framework. <strong>IEEE BIBM, 2025.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">CCF推荐</span></div><div class="results-mod-content">[21] MedMaskDiff: Mamba-Based Medical Semantic Image Synthesis for Segmentation. <strong>ICIC, 2025.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">CCF推荐</span></div><div class="results-mod-content">[22] Self-KT: Self-attentive Knowledge Tracing with Feature Fusion Pre-training in Online Education. <strong>IJCNN, 2024.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">CCF推荐</span></div><div class="results-mod-content">[23] PESAM: Privacy-enhanced Segment Anything Model for Medical Image Segmentation. <strong>ICIC, 2024.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">CCF推荐</span></div><div class="results-mod-content">[24] CGDC-LSTM: A novel hybrid neural network model for MOOC dropout prediction. <strong>IJCNN, 2023.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">CCF推荐</span></div><div class="results-mod-content">[25] MedCT-BERT: Multimodal Mortality Prediction using Medical ConvTransformer-BERT Model. <strong>IEEE ICTAI, 2023.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">CCF推荐</span></div><div class="results-mod-content">[26] MIFTP: A Multimodal Multi-Level Independent Fusion Framework with Improved Twin Pyramid for Multilabel Chest X-Ray Image Classification. <strong>IEEE ICTAI, 2023.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">EI检索</span></div><div class="results-mod-content">[27] Multi-modal Intermediate Fusion Model for diagnosis prediction. <strong>ICIAI, 2022.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">CCF推荐</span></div><div class="results-mod-content">[28] Readmission Prediction with Knowledge Graph Attention and RNN-Based Ordinary Differential Equations. <strong>KSEM, 2021.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">JCR 2区</span></div><div class="results-mod-content">[29] Video Highlight Extraction via Content-aware Deep Transfer. <strong>Multimedia Tools and Applications, 2019.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">JCR 2区</span></div><div class="results-mod-content">[30] UTSP: User-based two-step recommendation with popularity normalization towards diversity and novelty. <strong>IEEE Access, 2019.</strong></div></div>
+                    <div class="results-mod-item"><div class="results-mod-tags"><span class="res-tag tag-sci">CCF推荐</span></div><div class="results-mod-content">[31] Prediction for Student Academic Performance Using SMNaive Bayes Model. <strong>ADMA, 2019.</strong></div></div>
+                    <div class="results-mod-item" style="border-bottom:none;"><div class="results-mod-tags"><span class="res-tag tag-sci">CCF推荐</span></div><div class="results-mod-content">[32] ACO-RR: Ant Colony Optimization Ridge Regression in Reuse of Smart City System. <strong>ICSR, 2019.</strong></div></div>
+                </div>
+            </div>
+
+            <div class="results-toggle-container">
+                <button id="results-btn" class="results-toggle-btn" onclick="togglePublications()">
+                    <span>展开全量学术成果 (共 32 篇)</span> <i id="toggle-icon">▼</i>
+                </button>
+            </div>
+        </div>
+
+        <h4 class="l2-title" style="margin-top: 60px;">国家标准/专利/软件著作权</h4>
+        <div class="results-mod-ip-grid">
+            <div class="results-mod-ip-box">
+                <ul class="results-mod-list">
+                    <li><span class="ip-num">[1]</span>一种图像分割方法、系统及存储介质. <span class="ip-code">ZL202111397432.7</span></li>
+                    <li><span class="ip-num">[2]</span>基于CNNAE-LSTM的慕课辍学预测方法及系统. <span class="ip-code">CN202211418779.X</span></li>
+                    <li><span class="ip-num">[3]</span>一种基于大数据双向推荐的深度学习方法及双向推荐装置. <span class="ip-code">ZL201610471259.3</span></li>
+                    <li><span class="ip-num">[4]</span>新版本程序缺陷检测方法及装置. <span class="ip-code">ZL201810391348.6</span></li>
+                    <li>
+                        <span class="ip-num">[5]</span>电子文件存储与交换格式 流式文档. <span class="ip-code">国家标准 GB/T 44720-2024</span>
+                    </li>
+                    <li><span class="ip-num">[6]</span>基于Java的学生课程分析系统V1.0. <span class="ip-code">2022SR0022684</span></li>
+                    <li><span class="ip-num">[7]</span>基于Java的教师课程分析系统V1.0. <span class="ip-code">2021SR1783651</span></li>
+                    <li><span class="ip-num">[8]</span>教育新媒体自动化在线考试系统. <span class="ip-code">2020SR1108292</span></li>
+                </ul>
+            </div>
+            <div class="results-mod-ip-box">
+                <ul class="results-mod-list">
+                    <li><span class="ip-num">[9]</span>基于Spring框架的教务自动排课系统. <span class="ip-code">2020SR1093245</span></li>
+                    <li><span class="ip-num">[10]</span>MOOC平台教师课程效果反馈系统V1.0. <span class="ip-code">2018SR877165</span></li>
+                    <li><span class="ip-num">[11]</span>MOOC平台学生学习行为分析系统V1.0. <span class="ip-code">2018SR789310</span></li>
+                    <li><span class="ip-num">[12]</span>基于Java的高校招生管理系统V1.0. <span class="ip-code">2020SR1905607</span></li>
+                    <li><span class="ip-num">[13]</span>网上书店销售管理系统V1.0. <span class="ip-code">2020SR1905665</span></li>
+                    <li><span class="ip-num">[14]</span>博物馆信息检索系统V1.0. <span class="ip-code">2020SR1889157</span></li>
+                    <li><span class="ip-num">[15]</span>基于Unity游戏引擎的消除游戏——适物者塔卡库软件. <span class="ip-code">2020SR0966498</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePublications() {
+            const wrapper = document.getElementById('results-expandable');
+            const btn = document.getElementById('results-btn');
+            const icon = document.getElementById('toggle-icon');
+            const fade = document.getElementById('results-fade');
+            const isOpen = wrapper.classList.contains('is-open');
+            
+            if (isOpen) {
+                wrapper.classList.remove('is-open');
+                btn.querySelector('span').innerText = '展开全量学术成果 (共 32 篇)';
+                icon.innerText = '▼';
+                fade.classList.remove('is-hidden');
+            } else {
+                wrapper.classList.add('is-open');
+                btn.querySelector('span').innerText = '收起学术成果列表';
+                icon.innerText = '▲';
+                fade.classList.add('is-hidden');
+            }
+        }
+    </script>
+</section>
+    
+
+    <!-- 毕业去向 -->
+    <section id="graduation" style="padding: 100px 0; background-color: #fff;">
+    <script src="js/echarts.min.js"></script>
+    <script src="js/china.js"></script>
+
+    <style>
+        .grad-v14-container { max-width: 1300px; margin: 0 auto; padding: 0 40px; }
+        
+        .grad-v14-layout {
+            display: flex;
+            gap: 50px;
+            align-items: stretch;
+        }
+
+        /* --- 左侧区域：地图 + 数据概览 + 补充标注 --- */
+        .grad-v14-left-side {
+            flex: 1.4;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #china-map-local { width: 100%; height: 480px; }
+
+        /* 底部标注：低调不突兀 */
+        .map-note {
+            font-size: 0.85rem;
+            color: #a0aec0; /* 较淡的颜色 */
+            margin-top: 10px;
+            padding-left: 5px;
+            border-left: 2px solid #edf2f7;
+        }
+
+        .grad-stats-bar {
+            margin-top: 25px;
+            padding: 25px;
+            background: #f8fafc;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border: 1px solid #edf2f7;
+        }
+
+        .grad-stat-item { text-align: center; flex: 1; }
+        .grad-stat-num {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--oxford-blue);
+            line-height: 1;
+        }
+        .num-gold { color: var(--gold); }
+        .grad-stat-desc {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        /* --- 右侧区域：极简名单 --- */
+        .grad-v14-list-side {
+            flex: 1;
+            padding-left: 30px;
+            border-left: 2px solid #edf2f7;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .grad-v14-list { list-style: none; padding: 0; margin: 0; }
+
+        .grad-v14-item {
+            padding: 12px 15px;
+            font-size: 1rem;
+            color: #2d3748;
+            transition: all 0.3s ease;
+            border-bottom: 1px dashed #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .grad-v14-item:last-child { border-bottom: none; }
+
+        .grad-v14-item:hover {
+            background-color: #f8fafc;
+            transform: translateX(8px);
+        }
+
+        .grad-v14-name {
+            font-weight: bold;
+            color: var(--oxford-blue);
+            width: 85px;
+            display: inline-block;
+        }
+
+        .grad-v14-dest {
+            flex: 1;
+            color: #4A5568;
+            padding-right: 10px;
+        }
+
+        .grad-v14-tag {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #fff;
+            font-weight: bold;
+        }
+        .tag-bj { background: #A68966; } /* 北京 */
+        .tag-hn { background: #002147; } /* 湖南 */
+        .tag-js { background: #00417A; } /* 江苏 */
+
+        @media (max-width: 1000px) {
+            .grad-v14-layout { flex-direction: column; }
+            #china-map-local { height: 400px; }
+            .grad-v14-list-side { border-left: none; padding-left: 0; margin-top: 40px; }
+        }
+    </style>
+
+    <div class="grad-v14-container">
+        <h2 class="l1-title">学生毕业去向</h2>
+        
+        <div class="grad-v14-layout">
+            <div class="grad-v14-left-side">
+                <div>
+                    <div id="china-map-local"></div>
+                    <div class="map-note">
+                        注：图中点亮部分代表团队毕业学生的核心就业及深造分布区域。
+                    </div>
+                </div>
+                
+                <div class="grad-stats-bar">
+                    <div class="grad-stat-item">
+                        <div class="grad-stat-num num-gold">12<span style="font-size:1rem;">人</span></div>
+                        <div class="grad-stat-desc">北京核心就业/深造</div>
+                    </div>
+                    <div class="grad-stat-item" style="border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
+                        <div class="grad-stat-num">9<span style="font-size:1rem;">人</span></div>
+                        <div class="grad-stat-desc">重点企业/科研院所</div>
+                    </div>
+                    <div class="grad-stat-item">
+                        <div class="grad-stat-num">5<span style="font-size:1rem;">人</span></div>
+                        <div class="grad-stat-desc">硕博深造及高校任教</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grad-v14-list-side">
+                <div class="grad-v14-list">
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">袁从灏</span>
+                        <span class="grad-v14-dest">百度</span>
+                        <span class="grad-v14-tag tag-bj">北京</span>
+                    </div>
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">殷巧云</span>
+                        <span class="grad-v14-dest">天津大学(读博)，现任中国人民解放军航天工程大学教师</span>
+                        <span class="grad-v14-tag tag-bj">北京</span>
+                    </div>
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">贾宝婷</span>
+                        <span class="grad-v14-dest">奇安信科技</span>
+                        <span class="grad-v14-tag tag-bj">北京</span>
+                    </div>
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">鲁&nbsp;&nbsp;游</span>
+                        <span class="grad-v14-dest">航天二十五所 (体制内)</span>
+                        <span class="grad-v14-tag tag-bj">北京</span>
+                    </div>
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">裴&nbsp;&nbsp;骕</span>
+                        <span class="grad-v14-dest">北京深睿博联科技 (算法岗)</span>
+                        <span class="grad-v14-tag tag-bj">北京</span>
+                    </div>
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">郭忠民</span>
+                        <span class="grad-v14-dest">北京维卓致远医疗科技 (科研算法岗)</span>
+                        <span class="grad-v14-tag tag-bj">北京</span>
+                    </div>
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">曾晶妮</span>
+                        <span class="grad-v14-dest">湖南联通</span>
+                        <span class="grad-v14-tag tag-hn">湖南</span>
+                    </div>
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">张&nbsp;&nbsp;珂</span>
+                        <span class="grad-v14-dest">光大银行软开</span>
+                        <span class="grad-v14-tag tag-bj">北京</span>
+                    </div>
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">鲁国强</span>
+                        <span class="grad-v14-dest">北京理工大学 (读博)</span>
+                        <span class="grad-v14-tag tag-bj">北京</span>
+                    </div>
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">周宇航</span>
+                        <span class="grad-v14-dest">全国政协 (体制内)</span>
+                        <span class="grad-v14-tag tag-bj">北京</span>
+                    </div>
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">太雯娟</span>
+                        <span class="grad-v14-dest">光大银行总行</span>
+                        <span class="grad-v14-tag tag-bj">北京</span>
+                    </div>
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">斯琴其木格</span>
+                        <span class="grad-v14-dest">保研北京邮电大学 (本科)</span>
+                        <span class="grad-v14-tag tag-bj">北京</span>
+                    </div>
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">陈志浩</span>
+                        <span class="grad-v14-dest">保研北京邮电大学 (本科)</span>
+                        <span class="grad-v14-tag tag-bj">北京</span>
+                    </div>
+                    <div class="grad-v14-item">
+                        <span class="grad-v14-name">韩家成</span>
+                        <span class="grad-v14-dest">保研东南大学 (本科)</span>
+                        <span class="grad-v14-tag tag-js">江苏</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var gradChart = echarts.init(document.getElementById('china-map-local'));
+        var gradOption = {
+            tooltip: { trigger: 'item', formatter: '{b}' },
+            series: [{
+                name: '毕业分布',
+                type: 'map',
+                map: 'china',
+                roam: false,
+                label: { show: false },
+                itemStyle: {
+                    normal: { areaColor: '#f1f5f9', borderColor: '#fff', borderWidth: 1.5 }
+                },
+                emphasis: {
+                    label: { show: true, color: '#fff' },
+                    itemStyle: { areaColor: '#002147' }
+                },
+                data: [
+                    {name: '北京', itemStyle: { areaColor: '#A68966' }},
+                    {name: '湖南', itemStyle: { areaColor: '#002147' }},
+                    {name: '江苏', itemStyle: { areaColor: '#00417A' }}
+                ]
+            }]
+        };
+        gradChart.setOption(gradOption);
+        window.addEventListener('resize', function() { gradChart.resize(); });
+    </script>
+</section>
+
+
+
+
+
+
+    <!-- 合作研究 -->
+    <section id="collab" style="padding: 100px 0; background-color: #fff;">
+    <style>
+        /* 1. 局部专用文本样式 */
+        .collab-v7-description {
+            font-size: 1.1rem;
+            color: #4A5568;
+            line-height: 1.8;
+            margin-bottom: 50px;
+            text-align: justify;
+        }
+
+        .collab-v7-highlight {
+            font-weight: bold;
+            color: var(--oxford-blue);
+        }
+
+        /* 2. Logo 墙容器：弹性布局，通过精确计算确保排数 */
+        .collab-v7-logo-wall {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* 确保最后一排居中 */
+            gap: 30px;               /* 横向和纵向间距 */
+            margin-top: 50px;
+        }
+
+        /* 3. Logo 单体容器：去框线、精确计算宽度以实现一排5个 */
+        .collab-v7-logo-item {
+            /* 在 1300px 容器下，减去 padding 和 gap 后，约 220px 为一排5个的极限 */
+            flex: 0 0 220px;         
+            height: 160px;           /* 极大化高度 */
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;              /* 取消内边距，让图片占满 */
+            transition: all 0.3s ease;
+        }
+
+        /* 4. Logo 图片：原始色彩展示，最大化填充 */
+        .collab-v7-logo-item img {
+            max-width: 95%;
+            max-height: 95%;
+            display: block;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+
+        /* 5. 悬停交互：上浮与投影 */
+        .collab-v7-logo-item:hover {
+            transform: translateY(-8px);
+        }
+
+        .collab-v7-logo-item:hover img {
+             transform: scale(1.1);
+        }
+
+        /* 📱 手机端适配：一行两个 */
+        @media (max-width: 900px) {
+            .collab-v7-logo-wall {
+                gap: 15px;
+            }
+            .collab-v7-logo-item {
+                flex: 0 0 calc(50% - 15px);
+                height: 110px;
+            }
+        }
+    </style>
+
+    <div class="container">
+        <h2 class="l1-title">合作研究</h2>
+        
+        <p class="collab-v7-description">
+            科研团队与<span class="collab-v7-highlight">国内外高校/科研机构</span>（新加坡国立大学、悉尼科技大学、北京理工大学、厦门大学、南方科技大学、北京协和医学院医学信息研究所）、<span class="collab-v7-highlight">三甲医院</span>（北京大学第三医院、北京胸科医院、厦门市第三医院、宣武医院）、<span class="collab-v7-highlight">医疗企业</span>（迈瑞医疗、爱博诺德医疗、北京瞳沐医疗、北京维卓致远医疗）等单位长期保持紧密合作，合作单位导师参与团队学生指导与培养，<span class="collab-v7-highlight">可优先推荐毕业生前往读博、就业</span>。
+        </p>
+
+        <div class="collab-v7-logo-wall">
+            <div class="collab-v7-logo-item"><img src="images/logos/nus.png" alt="新加坡国立大学"></div>
+            <div class="collab-v7-logo-item"><img src="images/logos/uts.png" alt="悉尼科技大学"></div>
+            <div class="collab-v7-logo-item"><img src="images/logos/bit.png" alt="北京理工大学"></div>
+            <div class="collab-v7-logo-item"><img src="images/logos/xmu.png" alt="厦门大学"></div>
+            <div class="collab-v7-logo-item"><img src="images/logos/sustech.png" alt="南方科技大学"></div>
+
+            <div class="collab-v7-logo-item"><img src="images/logos/pumc.png" alt="北京协和医学院"></div>
+            <div class="collab-v7-logo-item"><img src="images/logos/pku3.png" alt="北京大学第三医院"></div>
+            <div class="collab-v7-logo-item"><img src="images/logos/chest.png" alt="北京胸科医院"></div>
+            <div class="collab-v7-logo-item"><img src="images/logos/xm3y.png" alt="厦门市第三医院"></div>
+            <div class="collab-v7-logo-item"><img src="images/logos/xuanwu.png" alt="宣武医院"></div>
+
+            <div class="collab-v7-logo-item"><img src="images/logos/mindray.png" alt="迈瑞医疗"></div>
+            <div class="collab-v7-logo-item"><img src="images/logos/eyebright.png" alt="爱博诺德医疗"></div>
+            <div class="collab-v7-logo-item"><img src="images/logos/tongmu.png" alt="北京瞳沐医疗"></div>
+            <div class="collab-v7-logo-item"><img src="images/logos/weizhuo.png" alt="北京维卓致远医疗"></div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- 团队活动 -->
+<section id="activities" style="padding: 100px 0; background-color: #fff;">
+    <style>
+        .act-final-container { max-width: 1300px; margin: 0 auto; padding: 0 40px; }
+        
+        /* 基础图片样式 */
+        .act-final-item {
+            position: relative; background: #fcfcfc; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+            border-radius: 6px;
+        }
+        .act-final-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .act-final-item:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,33,71,0.15); z-index: 10; }
+        .act-final-item:hover .act-final-img { transform: scale(1.08); }
+
+        /* 悬停毛玻璃文字 */
+        .act-final-caption {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background-color: rgba(0, 33, 71, 0.65); padding: 18px;
+            color: #fff; opacity: 0; transform: translateY(10px);
+            transition: all 0.4s ease; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .act-final-item:hover .act-final-caption { opacity: 1; transform: translateY(0); }
+        .act-final-text { font-size: 0.95rem; margin: 0; text-align: center; font-weight: 500; line-height: 1.4; }
+
+        /* 12列网格体系 */
+        .act-grid-main { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: 240px; gap: 20px; }
+        
+        /* 尺寸定义 */
+        .f-big   { grid-column: span 6; grid-row: span 2; } /* 跨2行的大图 (适合竖版或重要照片) */
+        .f-small { grid-column: span 4; grid-row: span 1; } /* 1/3宽的方图 */
+        .f-wide  { grid-column: span 6; grid-row: span 1; } /* 1/2宽的扁图 */
+
+        /* ============================================================
+           【折叠与动画区域：核心逻辑】
+           ============================================================ */
+        .act-expand-box {
+            max-height: 0; opacity: 0; overflow: hidden;
+            transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
+        }
+        .act-expand-box.is-active {
+            /* 因为底部增加了大图，需要增加预留高度确保完全展开 */
+            max-height: 3000px; 
+            opacity: 1;
+            margin-top: 20px;
+        }
+
+        /* 控制按钮：右下角极简风格 */
+        .act-btn-container { display: flex; justify-content: flex-end; margin-top: 40px; }
+        .act-toggle-btn {
+            background: none; border: none; color: var(--oxford-blue);
+            font-size: 1.05rem; font-weight: 700; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 10px; outline: none;
+        }
+        .act-toggle-btn:hover { color: var(--gold); text-decoration: underline; text-underline-offset: 5px; }
+        .act-toggle-btn i { font-style: normal; transition: transform 0.4s; }
+
+        @media (max-width: 900px) {
+            .act-grid-main { display: flex; flex-direction: column; }
+            .act-final-item { height: 280px !important; }
+            .act-final-caption { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <div class="act-final-container">
+        <h2 class="l1-title">学术交流/团队团建</h2>
+        <p style="font-size: 1.1rem; color: #4A5568; line-height: 1.8; margin-bottom: 50px;">
+            科研团队定期邀请国内外合作单位导师来校交流研讨，每年定期组织师生开展春游、秋游、聚餐等团建活动。
+        </p>
+
+        <div class="act-grid-main">
+            <div class="act-final-item f-big">
+                <img src="images/tuandui/xini.png" class="act-final-img">
+                <div class="act-final-caption"><p class="act-final-text">悉尼科技大学刘仁平教授（右四）带队来校交流</p></div>
+            </div>
+            <div class="act-final-item f-big">
+                <img src="images/tuandui/hzl.png" class="act-final-img">
+                <div class="act-final-caption"><p class="act-final-text">黄紫蓝同学参加国际会议并作主题报告</p></div>
+            </div>
+
+            <div class="act-final-item f-small">
+                <img src="images/tuandui/pengxueping.png" class="act-final-img">
+                <div class="act-final-caption"><p class="act-final-text">悉尼科技大学彭学平教授（右三）带队来校交流</p></div>
+            </div>
+            <div class="act-final-item f-small">
+                <img src="images/tuandui/liheng.png" class="act-final-img">
+                <div class="act-final-caption"><p class="act-final-text">南方科技大学李衡教授（左一）带队来校交流</p></div>
+            </div>
+            <div class="act-final-item f-small">
+                <img src="images/tuandui/caizhai.png" class="act-final-img">
+                <div class="act-final-caption"><p class="act-final-text">京郊水果园采摘</p></div>
+            </div>
+        </div>
+
+        <div id="act-fold-area" class="act-expand-box">
+            <div class="act-grid-main">
+                
+                <div class="act-final-item f-big">
+                    <img src="images/tuandui/cjy.jpg" class="act-final-img">
+                    <div class="act-final-caption"><p class="act-final-text">为发表A类论文的蔡玖运同学颁发奖品</p></div>
+                </div>
+
+                <div class="act-final-item f-big">
+                    <img src="images/tuandui/shuizhen.jpg" class="act-final-img">
+                    <div class="act-final-caption"><p class="act-final-text">古北水镇两日游</p></div>
+                </div>
+
+                <div class="act-final-item f-small">
+                    <img src="images/tuandui/zhouyuhang.jpg" class="act-final-img">
+                    <div class="act-final-caption"><p class="act-final-text">周宇航同学（左二）获国际会议 Best Student Paper Award</p></div>
+                </div>
+                <div class="act-final-item f-small">
+                    <img src="images/tuandui/xs.png" class="act-final-img">
+                    <div class="act-final-caption"><p class="act-final-text">香山红叶节秋游</p></div>
+                </div>
+                <div class="act-final-item f-small">
+                    <img src="images/tuandui/hongpa.png" class="act-final-img">
+                    <div class="act-final-caption"><p class="act-final-text">京郊别墅轰趴</p></div>
+                </div>
+
+                <div class="act-final-item f-wide">
+                    <img src="images/tuandui/xieshi.png" class="act-final-img">
+                    <div class="act-final-caption"><p class="act-final-text">毕业季谢师宴</p></div>
+                </div>
+                <div class="act-final-item f-wide">
+                    <img src="images/tuandui/jucan.png" class="act-final-img">
+                    <div class="act-final-caption"><p class="act-final-text">暑期聚餐</p></div>
+                </div>
+
+                <div class="act-final-item f-big">
+                    <img src="images/tuandui/hanjiacheng.png" class="act-final-img">
+                    <div class="act-final-caption"><p class="act-final-text">韩家成同学参加国际会议并作主题报告</p></div>
+                </div>
+                <div class="act-final-item f-big">
+                    <img src="images/tuandui/twj.jpg" class="act-final-img">
+                    <div class="act-final-caption"><p class="act-final-text">为发表A类论文的太雯娟同学（代领）颁发奖品</p></div>
+                </div>
+                </div>
+        </div>
+
+        <div class="act-btn-container">
+            <button id="act-toggle-btn" class="act-toggle-btn" onclick="toggleLayout()">
+                <span>展示更多精彩时刻</span> <i>▼</i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function toggleLayout() {
+            const box = document.getElementById('act-fold-area');
+            const text = document.querySelector('#act-toggle-btn span');
+            const icon = document.querySelector('#act-toggle-btn i');
+            
+            if (box.classList.contains('is-active')) {
+                box.classList.remove('is-active');
+                text.innerText = '展示更多精彩时刻';
+                icon.innerText = '▼';
+            } else {
+                box.classList.add('is-active');
+                text.innerText = '收起活动照片';
+                icon.innerText = '▲';
+            }
+        }
+    </script>
+</section>
+
+
+    
+
+</div>
+
+<footer style="background: var(--oxford-blue); color: #fff; padding: 80px 0 40px; border-top: 5px solid var(--gold);">
+    <style>
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.8fr 1.2fr 1.5fr; /* 适当加宽中间导航列 */
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+
+        .footer-column h4 {
+            color: var(--gold);
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            position: relative;
+            font-weight: bold;
+        }
+
+        .footer-column h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 30px;
+            height: 2px;
+            background: var(--gold);
+        }
+
+        /* 左侧：品牌展示 */
+        .footer-brand { font-size: 1.6rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 15px; }
+        .footer-mission { opacity: 0.7; font-size: 0.95rem; line-height: 1.8; text-align: justify; }
+
+        /* 中间：全量快速链接 (2列布局防止太长) */
+        .footer-links-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 20px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .footer-links-grid a { 
+            color: #fff; opacity: 0.7; text-decoration: none; font-size: 0.95rem; transition: 0.3s;
+            white-space: nowrap;
+        }
+        .footer-links-grid a:hover { opacity: 1; color: var(--gold); transform: translateX(3px); display: inline-block; }
+
+        /* 右侧：招生信息 (原人才招募已修改) */
+        .footer-cta-box {
+            background: rgba(166, 137, 102, 0.08);
+            border: 1px solid rgba(166, 137, 102, 0.2);
+            padding: 25px;
+            border-radius: 4px;
+        }
+        .footer-cta-title { color: var(--gold); font-weight: bold; margin-bottom: 12px; display: block; font-size: 1.1rem; }
+        .footer-email-click { 
+            font-family: 'Consolas', monospace; cursor: pointer; color: #fff; 
+            border-bottom: 1px dashed var(--gold); padding-bottom: 2px;
+            transition: all 0.3s;
+        }
+        .footer-email-click:hover { color: var(--gold); }
+
+        /* 底部版权栏 */
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 1000px) {
+            .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+            .footer-links-grid { grid-template-columns: 1fr 1fr; text-align: left; max-width: 300px; }
+            .footer-column h4::after { left: 0; }
+        }
+    </style>
+
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-column">
+                <div class="footer-brand">CVIS TEAM</div>
+                <p class="footer-mission">
+                    计算机视觉与智能系统团队深耕医疗图像分割与智能手术导航的理论研究及技术创新。依托实验室高水平科研平台，团队深度融合前沿临床课题与尖端算法攻关，在推动领域技术突破的同时，矢志培养具有全球视野与独立科研能力的卓越学术人才。
+                </p>
+            </div>
+
+            <div class="footer-column">
+                <h4>快速导航</h4>
+                <ul class="footer-links-grid">
+                    <li><a href="#pi">团队负责人</a></li>
+                    <li><a href="#research">研究方向</a></li>
+                    <li><a href="#projects">科研项目</a></li>
+                    <li><a href="#honors">荣获奖项</a></li>
+                    <li><a href="#results">团队成果</a></li>
+                    <li><a href="#graduation">毕业去向</a></li>
+                    <li><a href="#collab">合作研究</a></li>
+                    <li><a href="#activities">团队风采</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>研究生招生</h4>
+                <div class="footer-cta-box">
+                    <span class="footer-cta-title">🎓 2026年研究生招生</span>
+                    <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 15px; line-height: 1.6;">
+                        欢迎计算机、人工智能、电子信息等专业背景，且对医学影像、算法研究感兴趣的同学联系报考。
+                    </p>
+                    <div style="font-size: 0.95rem;">
+                        招生咨询：<span class="footer-email-click" onclick="copyEmail('niuke@bistu.edu.cn', this)">niuke@bistu.edu.cn</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div>
+                &copy; 2026 计算机视觉与智能系统团队. All Rights Reserved.
+            </div>
+            <div style="text-align: right;">
+                北京信息科技大学 计算机学院<br>
+                昌平校区：太行路55号 / 海淀校区：清河小营东路12号
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
